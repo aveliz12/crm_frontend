@@ -1,14 +1,14 @@
 import React from "react";
 import Layout from "../components/Layout";
 
-const Nosotros = () => {
+const newAccount = () => {
   return (
-    <div>
+    <>
       <Layout>
-        <h2>Desde nostros</h2>
+        <h1>Nuevo Registro</h1>
       </Layout>
-    </div>
+    </>
   );
 };
 
-export default Nosotros;
+export default newAccount;
