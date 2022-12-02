@@ -13,6 +13,16 @@ const newAccount = () => {
       email: "",
       password: "",
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("El nombre es Obligatorio"), //obligatorio y required toma un mensaje de error
+      lastName: Yup.string().required("El apellido es Obligatorio"),
+      email: Yup.string()
+        .email("El correo no es válido")
+        .required("El correo es Obligatorio"),
+      password: Yup.string()
+        .required("La contraseña es Obligatorio")
+        .min(6, "La contraseña debe ser de al menos 6 dígitos"),
+    }),
     onSubmit: (valores) => {
       console.log("enviando..");
       console.log(valores);
@@ -45,8 +55,15 @@ const newAccount = () => {
                   placeholder="Nombre de Usuario"
                   value={formik.values.name}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.name && formik.errors.name ? (
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                  <p className="font-bold">Error:</p>
+                  <p>{formik.errors.name}</p>
+                </div>
+              ) : null}
               <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
@@ -61,8 +78,15 @@ const newAccount = () => {
                   placeholder="Apellido del Usuario"
                   value={formik.values.lastName}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.lastName && formik.errors.lastName ? (
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                  <p className="font-bold">Error:</p>
+                  <p>{formik.errors.lastName}</p>
+                </div>
+              ) : null}
               <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
@@ -77,8 +101,16 @@ const newAccount = () => {
                   placeholder="Email Usuario"
                   value={formik.values.email}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.email && formik.errors.email ? (
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                  <p className="font-bold">Error:</p>
+                  <p>{formik.errors.email}</p>
+                </div>
+              ) : null}
+
               <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
@@ -93,8 +125,16 @@ const newAccount = () => {
                   placeholder="Password Usuario"
                   values={formik.values.password}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.password && formik.errors.password ? (
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                  <p className="font-bold">Error:</p>
+                  <p>{formik.errors.password}</p>
+                </div>
+              ) : null}
+
               <input
                 type="submit"
                 className="bg-gray-800 w-full mt-5 p-2 text-white uppercase hover:bg-gray-900"
