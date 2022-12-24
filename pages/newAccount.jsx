@@ -1,9 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useMutation, gql } from "@apollo/client";
+
+//copiar tal y como está en la consutal de graphql
+const NEW_COUNT = gql`
+  mutation newUser($input: UserInput) {
+    newUser(input: $input) {
+      id
+      name
+      lastName
+      email
+    }
+  }
+`;
 
 const newAccount = () => {
+  //State para le mensaje de si usuario ya esta registrado o no
+  const [mensaje, guardarMensaje] = useState(null);
+
+  //Mutation para crear nuevos usuarios
+  const [newUser] = useMutation(NEW_COUNT);
+
+  //Routing
+  const router = useRouter();
+
   //Validacion de formularion
   const formik = useFormik({
     initialValues: {
@@ -23,15 +46,52 @@ const newAccount = () => {
         .required("La contraseña es Obligatorio")
         .min(6, "La contraseña debe ser de al menos 6 dígitos"),
     }),
-    onSubmit: (valores) => {
-      console.log("enviando..");
-      console.log(valores);
+    onSubmit: async (values) => {
+      //los values son los que se envian en el formulario
+      //console.log(valores);
+      const { name, lastName, email, password } = values;
+
+      try {
+        const { data } = await newUser({
+          variables: {
+            input: {
+              name,
+              lastName,
+              email,
+              password,
+            },
+          },
+        });
+        console.log(data); //data es la respuesta de la funcion de graphql
+
+        //Usuario creado correctamente
+        saveMsg(`Se creó correctamente el Usuario: ${data.newUser.name}`);
+        setTimeout(() => {
+          saveMsg(null);
+          //redirigir usuario para iniciar sesion
+          router.push("/login");
+        }, 4000);
+      } catch (error) {
+        saveMsg(error.message.replace("GraphQL error:", ""));
+        setTimeout(() => {
+          saveMsg = null;
+        }, 3000);
+      }
     },
   });
+
+  const showMessage = () => {
+    return (
+      <div className="bg-white py-2 px-3 w-full my-3 max-w-sm text-center mx-auto">
+        <p>{mensaje}</p>
+      </div>
+    );
+  };
 
   return (
     <>
       <Layout>
+        {mensaje && showMessage()}
         <h1 className="text-center text-2xl text-white font-light">
           CREAR NUEVA CUENTA
         </h1>
