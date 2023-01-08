@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import Head from "next/head"; //componente que permite agregar algo en el head
 import SideBar from "./SideBar";
+import Header from "./Header";
 import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
@@ -22,6 +23,7 @@ const Layout = ({ children }) => {
           <div className="flex min-h-screen">
             <SideBar />
             <main className="sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5">
+              <Header />
               {children}
             </main>
           </div>
