@@ -72,7 +72,7 @@ const newAccount = () => {
           router.push("/login");
         }, 4000);
       } catch (error) {
-        saveMsg(error.message.replace("GraphQL error:", ""));
+        saveMsg(error.message.replace("GraphQL error: ", ""));
         setTimeout(() => {
           saveMsg = null;
         }, 3000);
