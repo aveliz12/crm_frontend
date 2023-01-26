@@ -1,4 +1,5 @@
 import Layout from "../components/Layout";
+import Client from "../components/Client";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -44,6 +45,8 @@ export default function Home() {
               <th className="w-1/5 py-2">Email</th>
               <th className="w-1/5 py-2">Empresa</th>
               <th className="w-1/5 py-2">Teléfono</th>
+              <th className="w-1/5 py-2">Eliminar</th>
+              <th className="w-1/5 py-2">Editar</th>
             </tr>
           </thead>
 
@@ -52,14 +55,7 @@ export default function Home() {
               ? data
               : data.getClientsSeller.map((client) => {
                   return (
-                    <tr key={client.id}>
-                      <td className="border px-4 py-2">
-                        {client.name} {client.lastName}
-                      </td>
-                      <td className="border px-4 py-2">{client.email}</td>
-                      <td className="border px-4 py-2">{client.business}</td>
-                      <td className="border px-4 py-2">{client.phone}</td>
-                    </tr>
+                    <Client key={client.id} client={client}/>
                   );
                 })}
           </tbody>
