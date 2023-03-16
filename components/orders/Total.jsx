@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import OderContext from "../../context/orders/OrderContext";
 
 const Total = () => {
-  const total = 200;
+  //Context de pedidos
+  const oderContext = useContext(OderContext);
+  const { total } = oderContext;
 
   return (
     <>

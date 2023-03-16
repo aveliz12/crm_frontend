@@ -11,6 +11,16 @@ import OderContext from "../context/orders/OrderContext";
 const newOrder = () => {
   //Utilizar context y extraer sus funciones y valores
   const oderContext = useContext(OderContext);
+  const { client, products, total } = oderContext;
+
+  const validateOrder = () => {
+    //array Metod llamado every: itera en todos los objetos del arreglo y todos deben cumplir la condicion revisada
+    return !products.every((producto) => producto.cantidad > 0) ||
+      total == 0 ||
+      client.length == 0
+      ? " opacity-50 cursor-not-allowed "
+      : "";
+  };
 
   return (
     <Layout>
@@ -23,9 +33,11 @@ const newOrder = () => {
           <Total />
 
           <button
-          type="button"
-          className={`bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900`}
-          >Registrar pedido</button>
+            type="button"
+            className={`bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900 ${validateOrder()}`}
+          >
+            Registrar pedido
+          </button>
         </div>
       </div>
     </Layout>

@@ -1,6 +1,27 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
+import OderContext from "../../context/orders/OrderContext";
 
 const SummaryProduct = ({ product }) => {
+  //Context de pedidos
+  const oderContext = useContext(OderContext);
+  const { numberProducts, updateTotal } = oderContext;
+
+  console.log(numberProducts);
+
+  //STATE
+  const [cantidad, setCantidad] = useState(0);
+
+  //EFFECT
+  useEffect(() => {
+    updateCantidad();
+    updateTotal();
+  }, [cantidad]);
+
+  const updateCantidad = () => {
+    const newProduct = { ...product, cantidad: Number(cantidad) };
+    numberProducts(newProduct);
+  };
+
   const { name, cost } = product;
 
   return (
@@ -14,6 +35,10 @@ const SummaryProduct = ({ product }) => {
           type="number"
           placeholder="Cantidad"
           className="shadow apperance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline md:ml-4"
+          onChange={(e) => {
+            setCantidad(e.target.value);
+          }}
+          value={cantidad}
         />
       </div>
     </>
