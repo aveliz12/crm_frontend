@@ -15,7 +15,7 @@ const SummaryOrder = () => {
       {products.length > 0 ? (
         <>
           {products.map((selected) => {
-            <SummaryProduct key={selected.id} product={selected} />;
+            return <SummaryProduct key={selected.id} product={selected} />;
           })}
         </>
       ) : (

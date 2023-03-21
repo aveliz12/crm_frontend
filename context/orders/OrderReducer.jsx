@@ -33,6 +33,7 @@ export default (state, action) => {
         //el nuevo total que es el acumulado y el elemento del arreglo sobre el que se esta iterando, este caso producto
         total: state.products.reduce((newTotal, articulo) => {
           newTotal += articulo.cost * articulo.cantidad;
+          return newTotal;
         }, 0),
       };
 

@@ -5,7 +5,6 @@ const Total = () => {
   //Context de pedidos
   const oderContext = useContext(OderContext);
   const { total } = oderContext;
-
   return (
     <>
       <div className="flex items-center mt-5 justify-between bg-white p-3">
