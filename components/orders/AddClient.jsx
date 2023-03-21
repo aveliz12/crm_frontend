@@ -16,6 +16,12 @@ const GET_CLIENTS_BY_USER = gql`
   }
 `;
 
+const options = [
+  { value: "chocolate", label: "Chocolate" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "vanilla", label: "Vanilla" },
+];
+
 const AddClientOrder = () => {
   const [client, setClient] = useState([]);
 
@@ -27,11 +33,12 @@ const AddClientOrder = () => {
   const { data, loading, error } = useQuery(GET_CLIENTS_BY_USER);
 
   useEffect(() => {
-    addClient (client);
+    //TODO: Funsion para pasar clientes
+    addClient(client);
   }, [client]);
 
-  const seleccionarCliente = (allClients) => {
-    setClient(allClients);
+  const seleccionarCliente = (options) => {
+    setClient(options);
   };
 
   //Resultados de la consulta
@@ -45,16 +52,12 @@ const AddClientOrder = () => {
         1.- Asignar un cliente al pedido.
       </p>
       <Select
-        instanceId="long-value-select"
         className="mt-3"
         options={getClientsSeller}
-        //isMulti={true}
         onChange={(opcion) => seleccionarCliente(opcion)}
-        getOptionValue={(opciones) => {
-          opciones.id;
-        }}
-        getOptionLabel={(opciones) => opciones.name}
-        placeholder="Busque o seleccione el cliente"
+        getOptionValue={(opcion) => opcion.id}
+        getOptionLabel={(opcion) => `${opcion.name} ${opcion.lastName}`}
+        placeholder="Busque o seleccione un cliente."
         noOptionsMessage={() => "No hay resultados."}
       />
     </Fragment>

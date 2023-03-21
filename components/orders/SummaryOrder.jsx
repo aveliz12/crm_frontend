@@ -7,8 +7,6 @@ const SummaryOrder = () => {
   const oderContext = useContext(OderContext);
   const { products } = oderContext;
 
-  console.log(products);
-
   return (
     <>
       <p className="mt-10 my-2 bg-white border-l-4 border-gray-800 text-gray-700 p-2 text-sm font-bold">
@@ -16,8 +14,8 @@ const SummaryOrder = () => {
       </p>
       {products.length > 0 ? (
         <>
-          {products.map((producto) => {
-            <SummaryProduct key={producto.id} product={producto} />;
+          {products.map((selected) => {
+            <SummaryProduct key={selected.id} product={selected} />;
           })}
         </>
       ) : (

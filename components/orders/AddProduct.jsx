@@ -30,8 +30,8 @@ const AddProduct = () => {
     addProduct(products);
   }, [products]);
 
-  const seleccionarProducto = (allProducts) => {
-    setProducts(allProducts);
+  const seleccionarProducto = (options) => {
+    setProducts(options);
   };
 
   if (loading) return null;
@@ -48,14 +48,12 @@ const AddProduct = () => {
         options={getProducts}
         isMulti={true}
         onChange={(opcion) => seleccionarProducto(opcion)}
-        getOptionValue={(opciones) => {
-          opciones.id;
-        }}
-        getOptionLabel={(opciones) =>
-          `${opciones.name} - ${opciones.stock} disponibles.`
+        getOptionValue={(opcion) => opcion.id}
+        getOptionLabel={(opcion) =>
+          `${opcion.name} - ${opcion.stock} disponibles.`
         }
         placeholder="Busque o seleccione el producto"
-        noOptionsMessage={() => "No hay resultados."}
+        noOptionsMessage={() => "No hay resultados"}
       />
     </Fragment>
   );

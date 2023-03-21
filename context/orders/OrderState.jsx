@@ -66,7 +66,7 @@ const OrderState = ({ children }) => {
   return (
     <OderContext.Provider
       value={{
-        client:state.client,
+        client: state.client,
         products: state.products,
         total: state.total,
         addClient,
