@@ -46,11 +46,11 @@ const newOrder = () => {
     const { id } = client;
 
     //Remover lo no deseado de productos
-    const order = products.map(
-      ({ __typename, stock, name, cost, ...product }) => {
-        return product;
-      }
-    );
+    const order = products.map(({ __typename, stock, ...product }) => {
+      return product;
+    });
+
+    console.log(order);
 
     try {
       const { data } = await newOrder({
@@ -68,7 +68,6 @@ const newOrder = () => {
 
       //Mostrar alerta
       Swal.fire("Correcto", "El pedido se registró correctamente.", "success");
-
     } catch (error) {
       //console.log(error);
       setMensaje(error.message.replace("GraphQL error: ", ""));

@@ -1,8 +1,33 @@
 import React from "react";
 import Layout from "../components/Layout";
 import Link from "next/link";
+import { gql, useQuery } from "@apollo/client";
+import Order from "../components/Order";
+
+const GET_ORDERS = gql`
+  query getAllOrders {
+    getOrderBySeller {
+      id
+      order {
+        id
+        cantidad
+        name
+      }
+      client
+      seller
+      total
+      status
+    }
+  }
+`;
 
 const Orders = () => {
+  const { data, loading, error } = useQuery(GET_ORDERS);
+
+  if (loading) return "Cargando...";
+
+  const { getOrderBySeller } = data;
+
   return (
     <Layout>
       <h1 className="text-2xl text-gray-800 font-light">Pedidos</h1>
@@ -11,6 +36,13 @@ const Orders = () => {
           Nuevo Pedido
         </a>
       </Link>
+      {getOrderBySeller.length === 0 ? (
+        <p className="mt-5 text-center text-2xl">No hay pedidos aun.</p>
+      ) : (
+        getOrderBySeller.map((pedido) => {
+          return <Order key={pedido.id} order={pedido} />;
+        })
+      )}
     </Layout>
   );
 };
