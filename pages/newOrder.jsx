@@ -16,6 +16,30 @@ const NEW_ORDER = gql`
   }
 `;
 
+const GET_ORDERS = gql`
+  query getAllOrders {
+    getOrderBySeller {
+      id
+      order {
+        id
+        cantidad
+        name
+      }
+      client {
+        id
+        name
+        lastName
+        business
+        email
+        phone
+      }
+      seller
+      total
+      status
+    }
+  }
+`;
+
 //Context de pedidos
 import OderContext from "../context/orders/OrderContext";
 
@@ -31,7 +55,20 @@ const newOrder = () => {
   const { client, products, total } = oderContext;
 
   //Mutation para crear un nuevo pedido
-  const [newOrder] = useMutation(NEW_ORDER);
+  const [newOrder] = useMutation(NEW_ORDER, {
+    update(cache, { data: { newOrder } }) {
+      const { getOrderBySeller } = cache.readQuery({
+        query: GET_ORDERS,
+      });
+
+      cache.writeQuery({
+        query: GET_ORDERS,
+        data: {
+          getOrderBySeller: [...getOrderBySeller, newOrder],
+        },
+      });
+    },
+  });
 
   const validateOrder = () => {
     //array Metod llamado every: itera en todos los objetos del arreglo y todos deben cumplir la condicion revisada

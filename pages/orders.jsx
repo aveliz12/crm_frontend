@@ -13,7 +13,14 @@ const GET_ORDERS = gql`
         cantidad
         name
       }
-      client
+      client {
+        id
+        name
+        lastName
+        business
+        email
+        phone
+      }
       seller
       total
       status
