@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 const GET_PRODUCTS = gql`
   query getProductsById($id: ID!) {
     getProductsById(id: $id) {
+      id
       name
       stock
       cost
@@ -37,7 +38,7 @@ const UpdateProduct = () => {
   //CONSULTAR PARA OBTENER EL PRODUCTO
   const { data, loading, error } = useQuery(GET_PRODUCTS, {
     variables: {
-      pid,
+      id: pid,
     },
   });
 
@@ -68,7 +69,7 @@ const UpdateProduct = () => {
     try {
       const { data } = await updateProducts({
         variables: {
-          pid,
+          id: pid,
           input: {
             name,
             stock,
@@ -76,6 +77,8 @@ const UpdateProduct = () => {
           },
         },
       });
+
+      console.log(data);
 
       //Redirigir hacia productos
       router.push("/products");
@@ -91,7 +94,7 @@ const UpdateProduct = () => {
     }
   };
 
-  //const { getProductsById } = data;
+  const { getProductsById } = data;
 
   return (
     <Layout>
@@ -101,7 +104,7 @@ const UpdateProduct = () => {
         <div className="w-full max-w-lg">
           <Formik
             enableReinitialize
-            //initialValues={getProductsById}
+            initialValues={getProductsById}
             validationSchema={schemaValidation}
             onSubmit={(valores) => {
               updateInforProduct(valores);

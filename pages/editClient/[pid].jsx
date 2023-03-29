@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 const GET_CLIENT = gql`
   query GetClientsById($id: ID!) {
     getClientsById(id: $id) {
+      id
       name
       lastName
       business
@@ -22,8 +23,12 @@ const GET_CLIENT = gql`
 const UPDATE_CLIENT = gql`
   mutation updateClient($id: ID!, $input: ClientInput) {
     updateClient(id: $id, input: $input) {
+      id
       name
+      lastName
+      business
       email
+      phone
     }
   }
 `;
@@ -31,12 +36,14 @@ const UPDATE_CLIENT = gql`
 const EditClient = () => {
   //Obtener el ID actual pasado desde la URL
   const router = useRouter();
-  const { query } = router;
+  const {
+    query: { pid },
+  } = router;
 
   //CONSULTAR PARA OBTENER EL CLIENT
   const { data, loading, error } = useQuery(GET_CLIENT, {
     variables: {
-      id: query.pid,
+      id: pid,
     },
   });
 
@@ -53,9 +60,39 @@ const EditClient = () => {
       .required("El correo es obligatorio"),
   });
 
-  if (loading) {
-    console.log("Cargando...");
-  }
+  if (loading) return "Cargando...";
+
+  //ACTUALIZAR CLIENTE
+  // const [updateClient] = useMutation(UPDATE_CLIENT, {
+  //   update(cache, { data: { updateClient } }) {
+  //     // Actulizar Clientes
+  //     const { getClientsById } = cache.readQuery({
+  //       query: GET_CLIENT,
+  //     });
+
+  //     const clientesActualizados = getClientsById.map((cliente) =>
+  //       cliente.id === id ? updateClient : cliente
+  //     );
+
+  //     cache.writeQuery({
+  //       query: GET_CLIENT,
+  //       data: {
+  //         getClientsById: clientesActualizados,
+  //       },
+  //     });
+
+  //     // Actulizar Cliente Actual
+  //     cache.writeQuery({
+  //       query: GET_CLIENT,
+  //       variables: { id },
+  //       data: {
+  //         getClientsById: updateClient,
+  //       },
+  //     });
+  //   },
+  // });
+
+  const { getClientsById } = data;
 
   //Modificar el cliente en la bdd
   const updateInfoClient = async (valores) => {
@@ -63,7 +100,7 @@ const EditClient = () => {
     try {
       const { data } = await updateClient({
         variables: {
-          id,
+          id: pid,
           input: {
             name,
             lastName,
@@ -74,7 +111,6 @@ const EditClient = () => {
         },
       });
 
-      //TODO: sweet alert
       //Mostrar una alerta
       Swal.fire(
         "Actualizado!",
@@ -82,13 +118,12 @@ const EditClient = () => {
         "success"
       );
 
-      //TODO: REDIRECCIONAR
+      //Redireccionar a usuario
       router.push("/");
     } catch (error) {
       console.log(error);
     }
   };
-
 
   return (
     <Fragment>
@@ -100,13 +135,12 @@ const EditClient = () => {
             <Formik
               validationSchema={schemaValidation}
               enableReinitialize
-              //initialValues={data}
-              onSubmit={(values, functions) => {
-                updateInfoClient(values);
+              initialValues={getClientsById}
+              onSubmit={(valores) => {
+                updateInfoClient(valores);
               }}
             >
               {(props) => {
-                console.log("PROPS CON VALUES",props.values.getClientsById.lastName)
                 return (
                   <form
                     className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
@@ -127,16 +161,16 @@ const EditClient = () => {
                         placeholder="Nombre Cliente"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        //value={props.values.getClientsById.name}
+                        value={props.values.name}
                       />
                     </div>
 
-                    {/* {props.touched.name && props.errors.name ? (
+                    {props.touched.name && props.errors.name ? (
                       <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                         <p className="font-bold">Error</p>
                         <p>{props.errors.name}</p>
                       </div>
-                    ) : null} */}
+                    ) : null}
 
                     <div className="mb-4">
                       <label
@@ -152,16 +186,16 @@ const EditClient = () => {
                         placeholder="Apellido del Cliente"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        //value={props.values.getClientsById.lastName}
+                        value={props.values.lastName}
                       />
                     </div>
 
-                    {/* {props.touched.lastName && props.errors.lastName ? (
+                    {props.touched.lastName && props.errors.lastName ? (
                       <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                         <p className="font-bold">Error</p>
                         <p>{props.errors.lastName}</p>
                       </div>
-                    ) : null} */}
+                    ) : null}
 
                     <div className="mb-4">
                       <label
@@ -177,16 +211,16 @@ const EditClient = () => {
                         placeholder="Negocio del Cliente"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        //value={props.values.getClientsById.business}
+                        value={props.values.business}
                       />
                     </div>
 
-                    {/* {props.touched.business && props.errors.business ? (
+                    {props.touched.business && props.errors.business ? (
                       <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                         <p className="font-bold">Error</p>
                         <p>{props.errors.business}</p>
                       </div>
-                    ) : null} */}
+                    ) : null}
 
                     <div className="mb-4">
                       <label
@@ -202,16 +236,16 @@ const EditClient = () => {
                         placeholder="Correo electrónico del Cliente"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        //value={props.values.getClientsById.email}
+                        value={props.values.email}
                       />
                     </div>
 
-                    {/* {props.touched.email && props.errors.email ? (
+                    {props.touched.email && props.errors.email ? (
                       <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                         <p className="font-bold">Error</p>
                         <p>{props.errors.email}</p>
                       </div>
-                    ) : null} */}
+                    ) : null}
 
                     <div className="mb-4">
                       <label
@@ -227,7 +261,7 @@ const EditClient = () => {
                         placeholder="Número de teléfono del Cliente"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        //value={props.values.getClientsById.phone}
+                        value={props.values.phone}
                       />
                     </div>
 
